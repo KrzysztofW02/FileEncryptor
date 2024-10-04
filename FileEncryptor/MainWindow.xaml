@@ -5,8 +5,37 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileEncryptor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="File Encryptor" Height="250" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <Label Content="Select algorithm:" VerticalAlignment="Center"/>
+            <ComboBox x:Name="AlgorithmComboBox" Width="150" Margin="10,0,0,0">
+                <ComboBoxItem Content="AES"/>
+                <ComboBoxItem Content="RSA"/>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <Label Content="Select file to encrypt:" VerticalAlignment="Center"/>
+            <Button x:Name="ChooseFileButton" Content="Choose File" Width="150" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+            <Label Content="Enter password (AES):" VerticalAlignment="Center"/>
+            <PasswordBox x:Name="PasswordBoxAES" Width="150" Margin="10,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button x:Name="EncryptButton" Content="Encrypt" Width="100" Margin="10,0,10,0"/>
+            <Button x:Name="DecryptButton" Content="Decrypt" Width="100"/>
+        </StackPanel>
     </Grid>
 </Window>

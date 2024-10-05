@@ -41,18 +41,34 @@ namespace FileEncryptor
             {
                 string publicKey = Convert.ToBase64String(rsa.ExportCspBlob(false));
                 string privateKey = Convert.ToBase64String(rsa.ExportCspBlob(true));
+                string keyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Keys");
+                if (!Directory.Exists(keyDirectory))
+                {
+                    Directory.CreateDirectory(keyDirectory);
+                }
 
-                File.WriteAllText("publicKey.pem", publicKey);
-                File.WriteAllText("privateKey.pem", privateKey);
+                File.WriteAllText(Path.Combine(keyDirectory, "publicKey.pem"), publicKey);
+                File.WriteAllText(Path.Combine(keyDirectory, "privateKey.pem"), privateKey);
             }
         }
 
-        private void EncryptRSA(string filePath, string publicKeyPath)
+
+        private void EncryptRSA(string filePath)
         {
-            byte[] data = File.ReadAllBytes(filePath);
+            string keyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Keys");
+            string publicKeyPath = Path.Combine(keyDirectory, "publicKey.pem");
+
+            if (!File.Exists(publicKeyPath))
+            {
+                MessageBox.Show("Public key not found. Please generate RSA keys first.");
+                return;
+            }
+
+            byte[] data = File.ReadAllBytes(filePath); 
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 rsa.ImportCspBlob(Convert.FromBase64String(File.ReadAllText(publicKeyPath)));
+
                 byte[] encryptedData = rsa.Encrypt(data, false);
 
                 string encryptedFilePath = Path.Combine(
@@ -63,13 +79,22 @@ namespace FileEncryptor
             }
         }
 
-
-        private void DecryptRSA(string filePath, string privateKeyPath)
+        private void DecryptRSA(string filePath)
         {
-            byte[] encryptedData = File.ReadAllBytes(filePath);
+            string keyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Keys");
+            string privateKeyPath = Path.Combine(keyDirectory, "privateKey.pem");
+
+            if (!File.Exists(privateKeyPath))
+            {
+                MessageBox.Show("Private key not found. Please generate RSA keys first.");
+                return;
+            }
+
+            byte[] encryptedData = File.ReadAllBytes(filePath); 
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 rsa.ImportCspBlob(Convert.FromBase64String(File.ReadAllText(privateKeyPath)));
+
                 byte[] decryptedData = rsa.Decrypt(encryptedData, false);
 
                 string decryptedFilePath = Path.Combine(
@@ -79,6 +104,7 @@ namespace FileEncryptor
                 File.WriteAllBytes(decryptedFilePath, decryptedData);
             }
         }
+
 
 
         private void EncryptAES(string filePath, string password)
@@ -175,8 +201,14 @@ namespace FileEncryptor
             }
             else if (selectedAlgorithm == "RSA")
             {
-                string publicKeyPath = "path_to_public_key.pem";  
-                EncryptRSA(selectedFilePath, publicKeyPath);
+                string keyDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Keys");
+                if (!File.Exists(Path.Combine(keyDirectory, "publicKey.pem")) || !File.Exists(Path.Combine(keyDirectory, "privateKey.pem")))
+                {
+                    MessageBox.Show("Generating RSA keys");
+                    GenerateRSAKeys();
+                }
+
+                EncryptRSA(selectedFilePath);
                 MessageBox.Show("File encrypted successfully using RSA.");
             }
             else
@@ -207,8 +239,7 @@ namespace FileEncryptor
             }
             else if (selectedAlgorithm == "RSA")
             {
-                string privateKeyPath = "path_to_private_key.pem"; 
-                DecryptRSA(selectedFilePath, privateKeyPath);
+                DecryptRSA(selectedFilePath);
                 MessageBox.Show("File decrypted successfully using RSA.");
             }
             else

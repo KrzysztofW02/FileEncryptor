@@ -5,7 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileEncryptor"
         mc:Ignorable="d"
-        Title="File Encryptor" Height="250" Width="600" WindowStartupLocation="CenterScreen">
+        Title="File Encryptor" Height="250" Width="450" WindowStartupLocation="CenterScreen" Background="#323232">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#515151"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="10" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#6A6A6A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,7 +45,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-            <Label Content="Select algorithm:" VerticalAlignment="Center"/>
+            <Label Content="Select algorithm:" VerticalAlignment="Center" Foreground="White"/>
             <ComboBox x:Name="AlgorithmComboBox" Width="150" Margin="10,0,0,0">
                 <ComboBoxItem Content="AES"/>
                 <ComboBoxItem Content="RSA"/>
@@ -24,18 +53,18 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-            <Label Content="Select file to encrypt:" VerticalAlignment="Center"/>
+            <Label Content="Select file to encrypt:" VerticalAlignment="Center" Foreground="White"/>
             <Button x:Name="ChooseFileButton" Content="Choose File" Width="150" Margin="10,0,0,0" Click="ChooseFileButton_Click"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
-            <Label Content="Enter password (AES):" VerticalAlignment="Center"/>
+            <Label Content="Enter password (AES):" VerticalAlignment="Center" Foreground="White"/>
             <PasswordBox x:Name="PasswordBoxAES" Width="150" Margin="10,0,0,0"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-            <Button x:Name="EncryptButton" Content="Encrypt" Width="100" Margin="10,0,10,0" Click="EncryptButton_Click"/>
-            <Button x:Name="DecryptButton" Content="Decrypt" Width="100" Click="DecryptButton_Click"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,10">
+            <Button x:Name="EncryptButton" Content="Encrypt" Width="100" Height="30" Margin="10,0,10,0" Click="EncryptButton_Click"/>
+            <Button x:Name="DecryptButton" Content="Decrypt" Width="100" Height="30" Margin="10,0,10,0" Click="DecryptButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
